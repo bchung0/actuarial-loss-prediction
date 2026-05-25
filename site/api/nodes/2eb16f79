@@ -1,0 +1,8 @@
+{
+  "type": "pickle.pickle_dataset.PickleDataset",
+  "filepath": "/Users/bettina/Documents/Data repository/Actuarial loss prediction/actuarial-loss-prediction/data/06_models/model.pkl",
+  "run_command": "kedro run --to-outputs=best_model",
+  "preview": null,
+  "preview_type": null,
+  "stats": null
+}

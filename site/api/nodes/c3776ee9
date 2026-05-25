@@ -1,0 +1,5 @@
+{
+  "parameters": {
+    "cv_random_state": 1
+  }
+}

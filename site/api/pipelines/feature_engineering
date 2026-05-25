@@ -1,0 +1,174 @@
+{
+  "nodes": [
+    {
+      "id": "4f22d481",
+      "name": "Setup_Feature_Engineering",
+      "tags": [],
+      "pipelines": [
+        "feature_engineering",
+        "__default__"
+      ],
+      "type": "task",
+      "modular_pipelines": [
+        "feature_engineering"
+      ],
+      "node_extras": null,
+      "parameters": {
+        "feature_engineering_parameters": {
+          "target_name": "UltimateIncurredClaimCost",
+          "multiplier": 1000000000.0,
+          "impute_column": [
+            "MaritalStatus"
+          ],
+          "impute_fill_value": "U",
+          "selected_columns": [
+            "ClaimNumber",
+            "ClaimDescription"
+          ],
+          "emb_model_name": "Qwen/Qwen3-Embedding-0.6B",
+          "batch_size": 32,
+          "load_embeddings_path": "data/02_intermediate/embeddings/desc_embeddings.db",
+          "save_embeddings_path": "data/02_intermediate/embeddings/",
+          "n_components": 100,
+          "to_drop": [
+            "ClaimDescription",
+            "ClaimNumber",
+            "DateTimeOfAccident",
+            "DateReported"
+          ],
+          "cat_features": [
+            "Gender",
+            "MaritalStatus",
+            "PartTimeFullTime"
+          ]
+        }
+      }
+    },
+    {
+      "id": "8b4476e5",
+      "name": "params:feature_engineering_parameters",
+      "tags": [],
+      "pipelines": [
+        "feature_engineering",
+        "__default__"
+      ],
+      "type": "parameters",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    },
+    {
+      "id": "9ec9e028",
+      "name": "feature_engineering_pipeline",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "feature_engineering",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_training",
+        "feature_engineering"
+      ],
+      "node_extras": null,
+      "layer": "feature_engineering",
+      "dataset_type": "io.memory_dataset.MemoryDataset"
+    },
+    {
+      "id": "feature_engineering",
+      "name": "feature_engineering",
+      "tags": [],
+      "pipelines": [
+        "feature_engineering"
+      ],
+      "type": "modularPipeline",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "8b4476e5",
+      "target": "4f22d481"
+    },
+    {
+      "source": "4f22d481",
+      "target": "9ec9e028"
+    },
+    {
+      "source": "8b4476e5",
+      "target": "feature_engineering"
+    },
+    {
+      "source": "feature_engineering",
+      "target": "9ec9e028"
+    }
+  ],
+  "layers": [
+    "feature_engineering",
+    "model_prediction",
+    "model_training"
+  ],
+  "tags": [],
+  "pipelines": [
+    {
+      "id": "__default__",
+      "name": "__default__"
+    },
+    {
+      "id": "feature_engineering",
+      "name": "feature_engineering"
+    },
+    {
+      "id": "model_prediction",
+      "name": "model_prediction"
+    },
+    {
+      "id": "model_training",
+      "name": "model_training"
+    }
+  ],
+  "modular_pipelines": {
+    "__root__": {
+      "id": "__root__",
+      "name": "__root__",
+      "inputs": [],
+      "outputs": [],
+      "children": [
+        {
+          "id": "9ec9e028",
+          "type": "data"
+        },
+        {
+          "id": "8b4476e5",
+          "type": "parameters"
+        },
+        {
+          "id": "feature_engineering",
+          "type": "modularPipeline"
+        }
+      ]
+    },
+    "feature_engineering": {
+      "id": "feature_engineering",
+      "name": "feature_engineering",
+      "inputs": [
+        "8b4476e5"
+      ],
+      "outputs": [
+        "9ec9e028"
+      ],
+      "children": [
+        {
+          "id": "4f22d481",
+          "type": "task"
+        }
+      ]
+    }
+  },
+  "selected_pipeline": "feature_engineering"
+}

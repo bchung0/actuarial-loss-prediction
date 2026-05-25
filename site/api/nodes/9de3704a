@@ -1,0 +1,12 @@
+{
+  "type": "pandas.csv_dataset.CSVDataset",
+  "filepath": "/Users/bettina/Documents/Data repository/Actuarial loss prediction/actuarial-loss-prediction/data/01_raw/train.csv",
+  "run_command": null,
+  "preview": null,
+  "preview_type": null,
+  "stats": {
+    "rows": 54000,
+    "columns": 15,
+    "file_size": 7638385
+  }
+}

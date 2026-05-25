@@ -1,0 +1,13 @@
+{
+  "code": "def build_model_pipeline(\n    feature_engineering_pipeline: Pipeline, model_params: dict = {}\n) -> Pipeline:\n    \"\"\"Build the model pipeline.\n\n    Args:\n        feature_engineering_pipeline (Pipeline): The feature engineering pipeline.\n        model_params (dict): The parameters for the HistGradientBoostingRegressor model.\n\n    Returns:\n        Pipeline: The complete model pipeline.\n    \"\"\"\n    return Pipeline(\n        [\n            (\"feature_engineering\", feature_engineering_pipeline),\n            (\"model\", HistGradientBoostingRegressor(**model_params)),\n        ]\n    )\n",
+  "filepath": "actuarial-loss-prediction/src/actuarial_loss_prediction/pipelines/model_training/nodes.py",
+  "parameters": {},
+  "run_command": "kedro run --to-nodes='model_training.Build_Model_Pipeline'",
+  "inputs": [
+    "feature_engineering_pipeline"
+  ],
+  "outputs": [
+    "model_training.model_pipeline"
+  ],
+  "preview": null
+}

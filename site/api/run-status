@@ -1,0 +1,100 @@
+{
+  "nodes": {
+    "4f22d481": {
+      "duration": 0.0022164580004755408,
+      "status": "success",
+      "error": null
+    },
+    "2ad6ca60": {
+      "duration": 0.001123041998653207,
+      "status": "success",
+      "error": null
+    },
+    "025319ba": {
+      "duration": 56.54279300000053,
+      "status": "success",
+      "error": null
+    },
+    "63f947fc": {
+      "duration": 11.839627125002153,
+      "status": "success",
+      "error": null
+    }
+  },
+  "datasets": {
+    "8b4476e5": {
+      "name": "params:feature_engineering_parameters",
+      "size": 0,
+      "status": "success",
+      "error": null
+    },
+    "9ec9e028": {
+      "name": "feature_engineering_pipeline",
+      "size": 0,
+      "status": "success",
+      "error": null
+    },
+    "8fce6a23": {
+      "name": "model_training.model_pipeline",
+      "size": 0,
+      "status": "success",
+      "error": null
+    },
+    "27e06b17": {
+      "name": "df_train",
+      "size": 7638385,
+      "status": "success",
+      "error": null
+    },
+    "fc7f8d3c": {
+      "name": "params:target_name",
+      "size": 0,
+      "status": "success",
+      "error": null
+    },
+    "e1494fbd": {
+      "name": "params:search_space",
+      "size": 0,
+      "status": "success",
+      "error": null
+    },
+    "c3776ee9": {
+      "name": "params:cv_random_state",
+      "size": 0,
+      "status": "success",
+      "error": null
+    },
+    "f8b6be56": {
+      "name": "params:n_trials",
+      "size": 0,
+      "status": "success",
+      "error": null
+    },
+    "2eb16f79": {
+      "name": "best_model",
+      "size": 96,
+      "status": "success",
+      "error": null
+    },
+    "9de3704a": {
+      "name": "df_test",
+      "size": 7638385,
+      "status": "success",
+      "error": null
+    },
+    "3812e4ce": {
+      "name": "predictions",
+      "size": 96,
+      "status": "success",
+      "error": null
+    }
+  },
+  "pipeline": {
+    "run_id": "fc863390-7eaa-4ded-a7b6-99cd08a9eb79",
+    "start_time": "2026-05-25T04:11:56.913230+00:00",
+    "end_time": "2026-05-25T04:13:05.884201+00:00",
+    "duration": 68.970971,
+    "status": "success",
+    "error": null
+  }
+}

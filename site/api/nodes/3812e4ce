@@ -1,0 +1,12 @@
+{
+  "type": "pandas.csv_dataset.CSVDataset",
+  "filepath": "/Users/bettina/Documents/Data repository/Actuarial loss prediction/actuarial-loss-prediction/data/07_model_output/predictions.csv",
+  "run_command": "kedro run --to-outputs=predictions",
+  "preview": null,
+  "preview_type": null,
+  "stats": {
+    "rows": 54000,
+    "columns": 2,
+    "file_size": 96
+  }
+}

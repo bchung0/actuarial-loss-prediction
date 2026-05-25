@@ -1,0 +1,82 @@
+{
+  "code": "def model_tuning(\n    df_train: pd.DataFrame,\n    model_pipeline: Pipeline,\n    target_name: int,\n    search_space: dict,\n    cv_random_state: int,\n    n_trials: int,\n):\n    \"\"\"Tune the model using Optuna.\n\n    Args:\n        df_train (pd.DataFrame): The training data.\n        model_pipeline (Pipeline): The model pipeline.\n        target_name (str): The name of the target variable.\n        search_space (dict): The search space for hyperparameter tuning.\n        cv_random_state (int): The random state for cross-validation.\n        n_trials (int): The number of trials for Optuna optimization.\n\n    Returns:\n        The best model after hyperparameter tuning.\n    \"\"\"\n    X_train = df_train.drop(columns=[target_name])\n    y_train = df_train[target_name]\n\n    X_train_fe = model_pipeline[\"feature_engineering\"].fit_transform(X_train, y_train)\n\n    study = optuna.create_study(direction=\"minimize\")\n    study.optimize(\n        lambda trial: objective(\n            trial, model_pipeline, X_train_fe, y_train, search_space, cv_random_state\n        ),\n        n_trials=n_trials,\n        show_progress_bar=True,\n    )\n\n    best_model = build_model_pipeline(\n        model_pipeline[\"feature_engineering\"], study.best_params\n    )\n    best_model.fit(X_train, y_train)\n\n    return best_model\n",
+  "filepath": "actuarial-loss-prediction/src/actuarial_loss_prediction/pipelines/model_training/nodes.py",
+  "parameters": {
+    "target_name": "UltimateIncurredClaimCost",
+    "search_space": {
+      "max_leaf_nodes": {
+        "type": "int",
+        "params": {
+          "low": 31,
+          "high": 255
+        }
+      },
+      "max_depth": {
+        "type": "int",
+        "params": {
+          "low": 3,
+          "high": 16
+        }
+      },
+      "learning_rate": {
+        "type": "float",
+        "params": {
+          "low": 0.01,
+          "high": 0.15,
+          "log": true
+        }
+      },
+      "max_iter": {
+        "type": "int",
+        "params": {
+          "low": 300,
+          "high": 2000
+        }
+      },
+      "min_samples_leaf": {
+        "type": "int",
+        "params": {
+          "low": 10,
+          "high": 120
+        }
+      },
+      "l2_regularization": {
+        "type": "float",
+        "params": {
+          "low": 1e-6,
+          "high": 10.0,
+          "log": true
+        }
+      },
+      "max_features": {
+        "type": "float",
+        "params": {
+          "low": 0.6,
+          "high": 1.0
+        }
+      },
+      "max_bins": {
+        "type": "int",
+        "params": {
+          "low": 128,
+          "high": 255
+        }
+      }
+    },
+    "cv_random_state": 1,
+    "n_trials": 1
+  },
+  "run_command": "kedro run --to-nodes='model_training.Model_Tuning'",
+  "inputs": [
+    "df_train",
+    "model_training.model_pipeline",
+    "params:target_name",
+    "params:search_space",
+    "params:cv_random_state",
+    "params:n_trials"
+  ],
+  "outputs": [
+    "best_model"
+  ],
+  "preview": null
+}

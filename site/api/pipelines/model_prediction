@@ -1,0 +1,190 @@
+{
+  "nodes": [
+    {
+      "id": "2eb16f79",
+      "name": "best_model",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "model_prediction",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_training",
+        "model_prediction"
+      ],
+      "node_extras": null,
+      "layer": "model_training",
+      "dataset_type": "pickle.pickle_dataset.PickleDataset"
+    },
+    {
+      "id": "63f947fc",
+      "name": "Model_Prediction",
+      "tags": [],
+      "pipelines": [
+        "model_prediction",
+        "__default__"
+      ],
+      "type": "task",
+      "modular_pipelines": [
+        "model_prediction"
+      ],
+      "node_extras": null,
+      "parameters": {}
+    },
+    {
+      "id": "9de3704a",
+      "name": "df_test",
+      "tags": [],
+      "pipelines": [
+        "model_prediction",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_prediction"
+      ],
+      "node_extras": {
+        "stats": {
+          "rows": 54000,
+          "columns": 15,
+          "file_size": 7638385
+        },
+        "styles": null
+      },
+      "layer": "model_training",
+      "dataset_type": "pandas.csv_dataset.CSVDataset"
+    },
+    {
+      "id": "3812e4ce",
+      "name": "predictions",
+      "tags": [],
+      "pipelines": [
+        "model_prediction",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_prediction"
+      ],
+      "node_extras": {
+        "stats": {
+          "rows": 54000,
+          "columns": 2,
+          "file_size": 96
+        },
+        "styles": null
+      },
+      "layer": "model_prediction",
+      "dataset_type": "pandas.csv_dataset.CSVDataset"
+    },
+    {
+      "id": "model_prediction",
+      "name": "model_prediction",
+      "tags": [],
+      "pipelines": [
+        "model_prediction"
+      ],
+      "type": "modularPipeline",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "63f947fc",
+      "target": "3812e4ce"
+    },
+    {
+      "source": "2eb16f79",
+      "target": "model_prediction"
+    },
+    {
+      "source": "9de3704a",
+      "target": "63f947fc"
+    },
+    {
+      "source": "2eb16f79",
+      "target": "63f947fc"
+    },
+    {
+      "source": "model_prediction",
+      "target": "3812e4ce"
+    },
+    {
+      "source": "9de3704a",
+      "target": "model_prediction"
+    }
+  ],
+  "layers": [
+    "feature_engineering",
+    "model_training",
+    "model_prediction"
+  ],
+  "tags": [],
+  "pipelines": [
+    {
+      "id": "__default__",
+      "name": "__default__"
+    },
+    {
+      "id": "feature_engineering",
+      "name": "feature_engineering"
+    },
+    {
+      "id": "model_prediction",
+      "name": "model_prediction"
+    },
+    {
+      "id": "model_training",
+      "name": "model_training"
+    }
+  ],
+  "modular_pipelines": {
+    "__root__": {
+      "id": "__root__",
+      "name": "__root__",
+      "inputs": [],
+      "outputs": [],
+      "children": [
+        {
+          "id": "3812e4ce",
+          "type": "data"
+        },
+        {
+          "id": "9de3704a",
+          "type": "data"
+        },
+        {
+          "id": "model_prediction",
+          "type": "modularPipeline"
+        },
+        {
+          "id": "2eb16f79",
+          "type": "data"
+        }
+      ]
+    },
+    "model_prediction": {
+      "id": "model_prediction",
+      "name": "model_prediction",
+      "inputs": [
+        "2eb16f79",
+        "9de3704a"
+      ],
+      "outputs": [
+        "3812e4ce"
+      ],
+      "children": [
+        {
+          "id": "63f947fc",
+          "type": "task"
+        }
+      ]
+    }
+  },
+  "selected_pipeline": "model_prediction"
+}

@@ -1,0 +1,14 @@
+{
+  "code": "def best_model_prediction(\n    best_model,\n    df_test: pd.DataFrame,\n):\n    \"\"\"Make predictions using the best model.\n\n    Args:\n        best_model: The best model after hyperparameter tuning.\n        df_test (pd.DataFrame): The test data.\n\n    Returns:\n            pd.DataFrame: The test data with the claim number and predictions.\n    \"\"\"\n    predictions = best_model.predict(df_test)\n\n    df_test[\"UltimateIncurredClaimCost\"] = predictions\n\n    return df_test[[\"ClaimNumber\", \"UltimateIncurredClaimCost\"]]\n",
+  "filepath": "actuarial-loss-prediction/src/actuarial_loss_prediction/pipelines/model_prediction/nodes.py",
+  "parameters": {},
+  "run_command": "kedro run --to-nodes='model_prediction.Model_Prediction'",
+  "inputs": [
+    "best_model",
+    "df_test"
+  ],
+  "outputs": [
+    "predictions"
+  ],
+  "preview": null
+}

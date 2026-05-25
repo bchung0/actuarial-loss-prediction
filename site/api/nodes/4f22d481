@@ -1,0 +1,42 @@
+{
+  "code": "def setup_feature_engineering_pipeline(feature_engineering_params: dict) -> Pipeline:\n    \"\"\"Set up the feature engineering pipeline.\n\n    Args:\n        feature_engineering_params (dict): The parameters for the feature engineering pipeline.\n\n    Returns:\n        Pipeline: The feature engineering pipeline.\n    \"\"\"\n    set_config(transform_output=\"pandas\")  # to get dataframe as Transformer output\n\n    date_feature_eng = FeatureUnion(\n        [\n            (\"add_report_delay_days\", ReportDelayHours()),\n            (\"add_accident_time_features\", AccidentTime()),\n            (\"add_report_time_features\", ReportTime()),\n        ]\n    )\n    desc_embedding_pca = Pipeline(\n        [\n            (\n                \"select_desc_column\",\n                ColumnSelector(feature_engineering_params[\"selected_columns\"]),\n            ),\n            (\n                \"embed_desc\",\n                SentenceEmbedding(\n                    feature_engineering_params[\"emb_model_name\"],\n                    feature_engineering_params[\"batch_size\"],\n                    feature_engineering_params[\"load_embeddings_path\"],\n                    feature_engineering_params[\"save_embeddings_path\"],\n                ),\n            ),\n            (\n                \"pca_embed_desc\",\n                PCATransformer(feature_engineering_params[\"n_components\"]),\n            ),\n        ]\n    )\n\n    claim_desc_feature_eng = FeatureUnion(\n        [\n            (\"add_desc_word_count\", ClaimDescriptionWordCount()),\n            (\"add_desc_embedding_pca\", desc_embedding_pca),\n        ]\n    )\n\n    cat_feature_eng = Pipeline(\n        [\n            (\n                \"impute_MaritalStatus\",\n                ConstantImputer(\n                    feature_engineering_params[\"impute_column\"],\n                    feature_engineering_params[\"impute_fill_value\"],\n                ),\n            ),\n            (\n                \"encode_cat_features\",\n                EncodeCatFeatures(feature_engineering_params[\"cat_features\"]),\n            ),\n        ]\n    )\n\n    feature_engineering_pipeline = Pipeline(\n        [\n            (\"cat_feature_eng\", cat_feature_eng),\n            (\n                \"add_new_features\",\n                FeatureUnion(\n                    [\n                        (\"date_fe\", date_feature_eng),\n                        (\"claim_desc_fe\", claim_desc_feature_eng),\n                        (\n                            \"drop_cols\",\n                            ColumnDropper(feature_engineering_params[\"to_drop\"]),\n                        ),\n                    ]\n                ),\n            ),\n        ]\n    )\n\n    #  feature_engineering_pipeline.set_params(**feature_engineering_params)\n\n    return feature_engineering_pipeline\n",
+  "filepath": "actuarial-loss-prediction/src/actuarial_loss_prediction/pipelines/feature_engineering/nodes.py",
+  "parameters": {
+    "feature_engineering_parameters": {
+      "target_name": "UltimateIncurredClaimCost",
+      "multiplier": 1000000000.0,
+      "impute_column": [
+        "MaritalStatus"
+      ],
+      "impute_fill_value": "U",
+      "selected_columns": [
+        "ClaimNumber",
+        "ClaimDescription"
+      ],
+      "emb_model_name": "Qwen/Qwen3-Embedding-0.6B",
+      "batch_size": 32,
+      "load_embeddings_path": "data/02_intermediate/embeddings/desc_embeddings.db",
+      "save_embeddings_path": "data/02_intermediate/embeddings/",
+      "n_components": 100,
+      "to_drop": [
+        "ClaimDescription",
+        "ClaimNumber",
+        "DateTimeOfAccident",
+        "DateReported"
+      ],
+      "cat_features": [
+        "Gender",
+        "MaritalStatus",
+        "PartTimeFullTime"
+      ]
+    }
+  },
+  "run_command": "kedro run --to-nodes='feature_engineering.Setup_Feature_Engineering'",
+  "inputs": [
+    "params:feature_engineering_parameters"
+  ],
+  "outputs": [
+    "feature_engineering_pipeline"
+  ],
+  "preview": null
+}

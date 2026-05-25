@@ -1,0 +1,642 @@
+{
+  "nodes": [
+    {
+      "id": "4f22d481",
+      "name": "Setup_Feature_Engineering",
+      "tags": [],
+      "pipelines": [
+        "feature_engineering",
+        "__default__"
+      ],
+      "type": "task",
+      "modular_pipelines": [
+        "feature_engineering"
+      ],
+      "node_extras": null,
+      "parameters": {
+        "feature_engineering_parameters": {
+          "target_name": "UltimateIncurredClaimCost",
+          "multiplier": 1000000000.0,
+          "impute_column": [
+            "MaritalStatus"
+          ],
+          "impute_fill_value": "U",
+          "selected_columns": [
+            "ClaimNumber",
+            "ClaimDescription"
+          ],
+          "emb_model_name": "Qwen/Qwen3-Embedding-0.6B",
+          "batch_size": 32,
+          "load_embeddings_path": "data/02_intermediate/embeddings/desc_embeddings.db",
+          "save_embeddings_path": "data/02_intermediate/embeddings/",
+          "n_components": 100,
+          "to_drop": [
+            "ClaimDescription",
+            "ClaimNumber",
+            "DateTimeOfAccident",
+            "DateReported"
+          ],
+          "cat_features": [
+            "Gender",
+            "MaritalStatus",
+            "PartTimeFullTime"
+          ]
+        }
+      }
+    },
+    {
+      "id": "8b4476e5",
+      "name": "params:feature_engineering_parameters",
+      "tags": [],
+      "pipelines": [
+        "feature_engineering",
+        "__default__"
+      ],
+      "type": "parameters",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    },
+    {
+      "id": "9ec9e028",
+      "name": "feature_engineering_pipeline",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "feature_engineering",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_training",
+        "feature_engineering"
+      ],
+      "node_extras": null,
+      "layer": "feature_engineering",
+      "dataset_type": "io.memory_dataset.MemoryDataset"
+    },
+    {
+      "id": "2ad6ca60",
+      "name": "Build_Model_Pipeline",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "__default__"
+      ],
+      "type": "task",
+      "modular_pipelines": [
+        "model_training"
+      ],
+      "node_extras": null,
+      "parameters": {}
+    },
+    {
+      "id": "8fce6a23",
+      "name": "model_training.model_pipeline",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_training"
+      ],
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": "io.memory_dataset.MemoryDataset"
+    },
+    {
+      "id": "025319ba",
+      "name": "Model_Tuning",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "__default__"
+      ],
+      "type": "task",
+      "modular_pipelines": [
+        "model_training"
+      ],
+      "node_extras": null,
+      "parameters": {
+        "target_name": "UltimateIncurredClaimCost",
+        "search_space": {
+          "max_leaf_nodes": {
+            "type": "int",
+            "params": {
+              "low": 31,
+              "high": 255
+            }
+          },
+          "max_depth": {
+            "type": "int",
+            "params": {
+              "low": 3,
+              "high": 16
+            }
+          },
+          "learning_rate": {
+            "type": "float",
+            "params": {
+              "low": 0.01,
+              "high": 0.15,
+              "log": true
+            }
+          },
+          "max_iter": {
+            "type": "int",
+            "params": {
+              "low": 300,
+              "high": 2000
+            }
+          },
+          "min_samples_leaf": {
+            "type": "int",
+            "params": {
+              "low": 10,
+              "high": 120
+            }
+          },
+          "l2_regularization": {
+            "type": "float",
+            "params": {
+              "low": 1e-6,
+              "high": 10.0,
+              "log": true
+            }
+          },
+          "max_features": {
+            "type": "float",
+            "params": {
+              "low": 0.6,
+              "high": 1.0
+            }
+          },
+          "max_bins": {
+            "type": "int",
+            "params": {
+              "low": 128,
+              "high": 255
+            }
+          }
+        },
+        "cv_random_state": 1,
+        "n_trials": 1
+      }
+    },
+    {
+      "id": "27e06b17",
+      "name": "df_train",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_training"
+      ],
+      "node_extras": {
+        "stats": {
+          "rows": 54000,
+          "columns": 15,
+          "file_size": 7638385
+        },
+        "styles": null
+      },
+      "layer": "model_training",
+      "dataset_type": "pandas.csv_dataset.CSVDataset"
+    },
+    {
+      "id": "fc7f8d3c",
+      "name": "params:target_name",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "__default__"
+      ],
+      "type": "parameters",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    },
+    {
+      "id": "e1494fbd",
+      "name": "params:search_space",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "__default__"
+      ],
+      "type": "parameters",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    },
+    {
+      "id": "c3776ee9",
+      "name": "params:cv_random_state",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "__default__"
+      ],
+      "type": "parameters",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    },
+    {
+      "id": "f8b6be56",
+      "name": "params:n_trials",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "__default__"
+      ],
+      "type": "parameters",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    },
+    {
+      "id": "2eb16f79",
+      "name": "best_model",
+      "tags": [],
+      "pipelines": [
+        "model_training",
+        "model_prediction",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_training",
+        "model_prediction"
+      ],
+      "node_extras": null,
+      "layer": "model_training",
+      "dataset_type": "pickle.pickle_dataset.PickleDataset"
+    },
+    {
+      "id": "63f947fc",
+      "name": "Model_Prediction",
+      "tags": [],
+      "pipelines": [
+        "model_prediction",
+        "__default__"
+      ],
+      "type": "task",
+      "modular_pipelines": [
+        "model_prediction"
+      ],
+      "node_extras": null,
+      "parameters": {}
+    },
+    {
+      "id": "9de3704a",
+      "name": "df_test",
+      "tags": [],
+      "pipelines": [
+        "model_prediction",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_prediction"
+      ],
+      "node_extras": {
+        "stats": {
+          "rows": 54000,
+          "columns": 15,
+          "file_size": 7638385
+        },
+        "styles": null
+      },
+      "layer": "model_training",
+      "dataset_type": "pandas.csv_dataset.CSVDataset"
+    },
+    {
+      "id": "3812e4ce",
+      "name": "predictions",
+      "tags": [],
+      "pipelines": [
+        "model_prediction",
+        "__default__"
+      ],
+      "type": "data",
+      "modular_pipelines": [
+        "model_prediction"
+      ],
+      "node_extras": {
+        "stats": {
+          "rows": 54000,
+          "columns": 2,
+          "file_size": 96
+        },
+        "styles": null
+      },
+      "layer": "model_prediction",
+      "dataset_type": "pandas.csv_dataset.CSVDataset"
+    },
+    {
+      "id": "feature_engineering",
+      "name": "feature_engineering",
+      "tags": [],
+      "pipelines": [
+        "__default__"
+      ],
+      "type": "modularPipeline",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    },
+    {
+      "id": "model_prediction",
+      "name": "model_prediction",
+      "tags": [],
+      "pipelines": [
+        "__default__"
+      ],
+      "type": "modularPipeline",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    },
+    {
+      "id": "model_training",
+      "name": "model_training",
+      "tags": [],
+      "pipelines": [
+        "__default__"
+      ],
+      "type": "modularPipeline",
+      "modular_pipelines": null,
+      "node_extras": null,
+      "layer": null,
+      "dataset_type": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "model_training",
+      "target": "2eb16f79"
+    },
+    {
+      "source": "fc7f8d3c",
+      "target": "025319ba"
+    },
+    {
+      "source": "4f22d481",
+      "target": "9ec9e028"
+    },
+    {
+      "source": "2eb16f79",
+      "target": "63f947fc"
+    },
+    {
+      "source": "9ec9e028",
+      "target": "model_training"
+    },
+    {
+      "source": "feature_engineering",
+      "target": "9ec9e028"
+    },
+    {
+      "source": "8fce6a23",
+      "target": "025319ba"
+    },
+    {
+      "source": "c3776ee9",
+      "target": "model_training"
+    },
+    {
+      "source": "8b4476e5",
+      "target": "4f22d481"
+    },
+    {
+      "source": "f8b6be56",
+      "target": "model_training"
+    },
+    {
+      "source": "2ad6ca60",
+      "target": "8fce6a23"
+    },
+    {
+      "source": "9de3704a",
+      "target": "63f947fc"
+    },
+    {
+      "source": "27e06b17",
+      "target": "model_training"
+    },
+    {
+      "source": "e1494fbd",
+      "target": "model_training"
+    },
+    {
+      "source": "c3776ee9",
+      "target": "025319ba"
+    },
+    {
+      "source": "fc7f8d3c",
+      "target": "model_training"
+    },
+    {
+      "source": "025319ba",
+      "target": "2eb16f79"
+    },
+    {
+      "source": "model_prediction",
+      "target": "3812e4ce"
+    },
+    {
+      "source": "2eb16f79",
+      "target": "model_prediction"
+    },
+    {
+      "source": "f8b6be56",
+      "target": "025319ba"
+    },
+    {
+      "source": "8b4476e5",
+      "target": "feature_engineering"
+    },
+    {
+      "source": "63f947fc",
+      "target": "3812e4ce"
+    },
+    {
+      "source": "27e06b17",
+      "target": "025319ba"
+    },
+    {
+      "source": "9ec9e028",
+      "target": "2ad6ca60"
+    },
+    {
+      "source": "9de3704a",
+      "target": "model_prediction"
+    },
+    {
+      "source": "e1494fbd",
+      "target": "025319ba"
+    }
+  ],
+  "layers": [
+    "feature_engineering",
+    "model_training",
+    "model_prediction"
+  ],
+  "tags": [],
+  "pipelines": [
+    {
+      "id": "__default__",
+      "name": "__default__"
+    },
+    {
+      "id": "feature_engineering",
+      "name": "feature_engineering"
+    },
+    {
+      "id": "model_prediction",
+      "name": "model_prediction"
+    },
+    {
+      "id": "model_training",
+      "name": "model_training"
+    }
+  ],
+  "modular_pipelines": {
+    "__root__": {
+      "id": "__root__",
+      "name": "__root__",
+      "inputs": [],
+      "outputs": [],
+      "children": [
+        {
+          "id": "model_training",
+          "type": "modularPipeline"
+        },
+        {
+          "id": "model_prediction",
+          "type": "modularPipeline"
+        },
+        {
+          "id": "9de3704a",
+          "type": "data"
+        },
+        {
+          "id": "2eb16f79",
+          "type": "data"
+        },
+        {
+          "id": "3812e4ce",
+          "type": "data"
+        },
+        {
+          "id": "9ec9e028",
+          "type": "data"
+        },
+        {
+          "id": "fc7f8d3c",
+          "type": "parameters"
+        },
+        {
+          "id": "27e06b17",
+          "type": "data"
+        },
+        {
+          "id": "feature_engineering",
+          "type": "modularPipeline"
+        },
+        {
+          "id": "c3776ee9",
+          "type": "parameters"
+        },
+        {
+          "id": "8b4476e5",
+          "type": "parameters"
+        },
+        {
+          "id": "e1494fbd",
+          "type": "parameters"
+        },
+        {
+          "id": "f8b6be56",
+          "type": "parameters"
+        }
+      ]
+    },
+    "feature_engineering": {
+      "id": "feature_engineering",
+      "name": "feature_engineering",
+      "inputs": [
+        "8b4476e5"
+      ],
+      "outputs": [
+        "9ec9e028"
+      ],
+      "children": [
+        {
+          "id": "4f22d481",
+          "type": "task"
+        }
+      ]
+    },
+    "model_prediction": {
+      "id": "model_prediction",
+      "name": "model_prediction",
+      "inputs": [
+        "2eb16f79",
+        "9de3704a"
+      ],
+      "outputs": [
+        "3812e4ce"
+      ],
+      "children": [
+        {
+          "id": "63f947fc",
+          "type": "task"
+        }
+      ]
+    },
+    "model_training": {
+      "id": "model_training",
+      "name": "model_training",
+      "inputs": [
+        "e1494fbd",
+        "9ec9e028",
+        "f8b6be56",
+        "fc7f8d3c",
+        "c3776ee9",
+        "27e06b17"
+      ],
+      "outputs": [
+        "2eb16f79"
+      ],
+      "children": [
+        {
+          "id": "2ad6ca60",
+          "type": "task"
+        },
+        {
+          "id": "8fce6a23",
+          "type": "data"
+        },
+        {
+          "id": "025319ba",
+          "type": "task"
+        }
+      ]
+    }
+  },
+  "selected_pipeline": "__default__"
+}
