@@ -9,7 +9,7 @@ encoded_cat_features:
   - PartTimeFullTime_P
 
 cv_random_state: 1
-n_trials: 1
+n_trials: 100
 
 search_space:
 

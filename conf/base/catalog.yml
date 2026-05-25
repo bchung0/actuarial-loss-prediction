@@ -17,7 +17,7 @@ df_train:
 
 df_test:
   type: pandas.CSVDataset
-  filepath: data/01_raw/train.csv
+  filepath: data/01_raw/test.csv
   load_args:
     parse_dates:
       - DateTimeOfAccident
