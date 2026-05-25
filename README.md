@@ -10,14 +10,16 @@
 <br>
 <br>
 
-<p align="center"><a href="https://bchung0.github.io/actuarial-loss-prediction/?types=nodes,datasets&expandAllPipelines=false&pid=__default__" target="_blank" rel="noopener noreferrer">
-  <img 
-    src="https://img.shields.io/badge/Open-Kedro%20Viz-7A3EF0?style=for-the-badge&logo=kedro&logoColor=white"
-    alt="Open Kedro Viz"
-  /></p>
+<p align="center">
+  <a href="https://bchung0.github.io/actuarial-loss-prediction/?types=nodes,datasets&expandAllPipelines=false&pid=__default__" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="https://img.shields.io/badge/Open-Kedro%20Viz-7A3EF0?style=for-the-badge&logo=kedro&logoColor=white"
+      alt="Open Kedro Viz"
+    />
+  </a>
+</p>
 
 <br>
-
 
 ## Goal
 
@@ -25,7 +27,7 @@ The goal of this challenge is to predict **Workers Compensation claim costs** us
 
 The target variable is:
 
-- **UltimateIncurredClaimCost** (continuous, strictly positive)
+- `UltimateIncurredClaimCost` (continuous, strictly positive)
 
 The evaluation metric is **RMSE (Root Mean Squared Error)**, which heavily penalizes large errors. This makes the problem particularly sensitive to outliers. It is suitable for this problem as we want to avoid large errors on claim cost prediction.
 
@@ -36,7 +38,12 @@ The evaluation metric is **RMSE (Root Mean Squared Error)**, which heavily penal
 - test.csv: test set for prediction
 - sample_submission.csv
 
-Click here to access the kaggle challenge page: [https://www.kaggle.com/competitions/actuarial-loss-estimation/overview](https://www.kaggle.com/competitions/actuarial-loss-estimation/overview)
+The dataset was built and supplied by Colin Priest.
+
+The challenge is closed, but late submissions can still be made after the official deadline to evaluate model predictions.
+
+Click here to access the kaggle challenge page: 
+[https://www.kaggle.com/competitions/actuarial-loss-estimation/overview](https://www.kaggle.com/competitions/actuarial-loss-estimation/overview)
 
 <br>
 
@@ -77,7 +84,7 @@ Click here to access the kaggle challenge page: [https://www.kaggle.com/competit
 │   │           └── pipeline.py
 └── tests/                                      # automated tests
 ```
-
+<br>
 
 ## Pipeline Architecture
 
@@ -144,9 +151,11 @@ graph TD
 
 <br>
 
-The dataset is relatively clean. Basic validation checks were done to make sure we don't have irrelevant data (example: `DaysWorkedPerWeek` between 0 and 7, `DateReported` after `DateTimeOfAccident`, `HoursWorkedPerWeek`<150, etc.).
+The dataset is relatively clean. Basic validation checks were done to make sure there is no irrelevant data (example: `DaysWorkedPerWeek` between 0 and 7, `DateReported` after `DateTimeOfAccident`, `HoursWorkedPerWeek`<150, etc.). These checks should be performed during the exploratory phase, and they can also be incorporated into the pipeline at a later stage.
 
 The only feature containing missing values is `MaritalStatus`, with 29 missing entries in the training set (out of 54000 rows, ~0.05%) and 18 in the test set.  Given the very low proportion of missing and the absence of additional contextual information, these values were imputed as "U" (Unknown). The number of missing observations is too low to reliably infer whether they correspond to the M or S categories based on other features or the target-based patterns.
+
+The challenge description specifies that competitors are encouraged to account for claims inflation. However, since the train/test split on `DateTimeOfAccident` and `DateReported` preserves a similar temporal distribution rather than using a chronological past/future split, inflation effects are implicitly captured by the time-based features already present in the dataset.
 
 ### Datetime features
 Time-based features were extracted from `DateTimeOfAccident` and `DateReported`, including:
@@ -174,9 +183,9 @@ The target variable, `UltimateIncurredClaimCost`, is strictly positive and heavi
 
 To improve model performance, two common strategies may be considered:
 - Applying a log transformation to the target variable
-- Removing extreme outliers using a configurable threshold (e.g., setting multiplier in parameters_feature_engineering.yml to 3.0 for conservative filtering, or higher values for more aggressive filtering)
+- Removing extreme outliers using a configurable threshold (e.g., setting `multiplier` in `parameters_feature_engineering.yml` to 3.0 for conservative filtering, or higher values for less aggressive filtering to remove only extreme cases)
 
-These approaches can help stabilize variance and reduce the influence of extreme values on the loss function. At this stage, target log-transformation has not been implemented in the pipeline.
+These approaches can help stabilize variance and reduce the influence of extreme values on the loss function, particularly if they are not generalisable. A conservative approach is recommended, as the model should still be able to capture large claim costs. At this stage, a log-transformation of the target has not been implemented in the pipeline.
 
 <br>
 
