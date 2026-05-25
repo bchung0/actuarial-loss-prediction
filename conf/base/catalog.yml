@@ -1,0 +1,44 @@
+feature_engineering_pipeline:
+  type: MemoryDataset
+  metadata:
+    kedro-viz:
+      layer: feature_engineering
+
+df_train:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/train.csv
+  load_args:
+    parse_dates:
+      - DateTimeOfAccident
+      - DateReported
+  metadata:
+    kedro-viz:
+      layer: model_training
+
+df_test:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/train.csv
+  load_args:
+    parse_dates:
+      - DateTimeOfAccident
+      - DateReported
+  metadata:
+    kedro-viz:
+      layer: model_training
+
+best_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/model.pkl
+  backend: cloudpickle
+  versioned: True
+  metadata:
+    kedro-viz:
+      layer: model_training
+
+predictions:
+  type: pandas.CSVDataset
+  filepath: data/07_model_output/predictions.csv
+  versioned: True
+  metadata:
+    kedro-viz:
+      layer: model_prediction

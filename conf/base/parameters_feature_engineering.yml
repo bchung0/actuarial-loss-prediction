@@ -1,0 +1,29 @@
+feature_engineering_parameters :
+  target_name: UltimateIncurredClaimCost
+  multiplier: 1e9
+
+  impute_column:
+    - MaritalStatus
+  impute_fill_value: U
+
+  selected_columns:
+    - ClaimNumber
+    - ClaimDescription
+
+  emb_model_name: Qwen/Qwen3-Embedding-0.6B
+  batch_size: 32
+  load_embeddings_path: data/02_intermediate/embeddings/desc_embeddings.db
+  save_embeddings_path: data/02_intermediate/embeddings/
+
+  n_components: 100
+
+  to_drop:
+    - ClaimDescription
+    - ClaimNumber
+    - DateTimeOfAccident
+    - DateReported
+
+  cat_features:
+    - Gender
+    - MaritalStatus
+    - PartTimeFullTime

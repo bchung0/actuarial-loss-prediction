@@ -1,0 +1,70 @@
+encoded_cat_features:
+  - Gender_F
+  - Gender_M
+  - Gender_U
+  - MaritalStatus_M
+  - MaritalStatus_S
+  - MaritalStatus_U
+  - PartTimeFullTime_F
+  - PartTimeFullTime_P
+
+cv_random_state: 1
+n_trials: 1
+
+search_space:
+
+  max_leaf_nodes:
+    type: int
+    params:
+      low: 31
+      high: 255
+
+  max_depth:
+    type: int
+    params:
+      low: 3
+      high: 16
+
+  learning_rate:
+    type: float
+    params:
+      low: 0.01
+      high: 0.15
+      log: true
+
+  max_iter:
+    type: int
+    params:
+      low: 300
+      high: 2000
+
+  min_samples_leaf:
+    type: int
+    params:
+      low: 10
+      high: 120
+
+  l2_regularization:
+    type: float
+    params:
+      low: 1e-6
+      high: 10.0
+      log: true
+
+  max_features:
+    type: float
+    params:
+      low: 0.6
+      high: 1.0
+
+  max_bins:
+    type: int
+    params:
+      low: 128
+      high: 255
+
+
+fixed_params:
+  loss: squared_error
+  random_state: 42
+
