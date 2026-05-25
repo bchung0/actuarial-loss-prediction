@@ -44,28 +44,38 @@ Click here to access the kaggle challenge page: [https://www.kaggle.com/competit
 
 
 ```py
-project-dir/
-├── .gitignore
-├── conf/
-├── data/
-├── docs/
-├── notebooks/
-├── pyproject.toml
-├── README.md
-└── src/
-    └── actuarial_loss_prediction/
-        └── pipelines/
-            ├── feature_engineering/
-            │   ├── nodes.py
-            │   ├── pipeline.py
-            │   └── transformers.py
-            ├── model_training/
-            │   ├── nodes.py
-            │   └── pipeline.py
-            └── model_prediction/
-                ├── nodes.py
-                └── pipeline.py
-
+.
+├── conf/                                      # configuration files
+│   ├── base/
+│   │   ├── catalog.yml
+│   │   ├── parameters.yml
+│   │   ├── parameters_feature_engineering.yml
+│   │   ├── parameters_model_prediction.yml
+│   │   └── parameters_model_training.yml
+├── data/                                      # dataset storage
+├── notebooks/                                 # exploratory notebooks
+├── src/                                       # source code
+│   ├── actuarial_loss_prediction/
+│   │   ├── __init__.py
+│   │   ├── __main__.py
+│   │   ├── settings.py
+│   │   ├── pipeline_registry.py
+│   │   └── pipelines/
+│   │       ├── __init__.py
+│   │       ├── feature_engineering/
+│   │       │   ├── __init__.py
+│   │       │   ├── nodes.py
+│   │       │   ├── pipeline.py
+│   │       │   └── transformers.py
+│   │       ├── model_training/
+│   │       │   ├── __init__.py
+│   │       │   ├── nodes.py
+│   │       │   └── pipeline.py
+│   │       └── model_prediction/
+│   │           ├── __init__.py
+│   │           ├── nodes.py
+│   │           └── pipeline.py
+└── tests/                                      # automated tests
 ```
 
 
