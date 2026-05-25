@@ -1,5 +1,13 @@
 # Kaggle challenge: Actuarial loss prediction 
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.13-blue?style=for-the-badge&logo=python" alt="Python 3.13" />
+  <img src="https://img.shields.io/badge/Kedro-Pipeline-7A3EF0?style=for-the-badge&logo=kedro&logoColor=white" alt="Kedro Pipeline" />
+  <img src="https://img.shields.io/badge/uv-venv-000000?style=for-the-badge&logo=python&logoColor=white" alt="uv venv" />
+  <img src="https://img.shields.io/badge/Ruff-Code%20Style-000000?style=for-the-badge&logo=ruff&logoColor=white" alt="Ruff code style" />
+</p>
+
+<br>
 <br>
 
 <center><a href="https://bchung0.github.io/actuarial-loss-prediction/?types=nodes,datasets&expandAllPipelines=false&pid=__default__" target="_blank" rel="noopener noreferrer">
@@ -9,39 +17,62 @@
   />
 </a></center>
 
+<br>
+
+
 ## Goal
 
-The goal of this challenge is to predict Workers Compensation claims using highly realistic synthetic data.
+The goal of this challenge is to predict **Workers Compensation claim costs** using realistic synthetic data.
 
-Data: 
-* train.csv.: The training set containing 54,000 insurance policies that you can use to train your model
-* test.csv: The test set.
-* sample_submission.csv: A sample submission file in the correct format
+The target variable is:
+
+- **UltimateIncurredClaimCost** (continuous, strictly positive)
+
+The evaluation metric is **RMSE (Root Mean Squared Error)**, which heavily penalizes large errors. This makes the problem particularly sensitive to outliers. It is suitable for this problem as we want to avoid large errors on claim cost prediction.
+
+<br>
+
+## Data 
+- train.csv.: 54,000 insurance policies for training
+- test.csv: test set for prediction
+- sample_submission.csv
 
 Click here to access the kaggle challenge page: [https://www.kaggle.com/competitions/actuarial-loss-estimation/overview](https://www.kaggle.com/competitions/actuarial-loss-estimation/overview)
 
-The evaluation metric is RSME. This metric works well with continous target variable. It penalizes big mistakes heavily, which is suitable for this problem as we want to avoid large errors on claim cost prediction. Here we tend to care more about extreme deviation than median behavior.
-We have to be careful about outliers when using this metric.
+<br>
 
 ## Project structure
 
+
 ```py
-project-dir         # Parent directory of the template
-├── .gitignore      # Hidden file that prevents staging of unnecessary files to git
-├── conf            # Project configuration files
-├── data            # Local project data (not committed to version control)
-├── docs            # Project documentation
-├── notebooks       # Project-related Jupyter notebooks (can be used for experimental code before moving the code to src)
-├── pyproject.toml  # Identifies the project root and contains configuration information
-├── README.md       # Project README
-└── src             # Project source code
+project-dir/
+├── .gitignore
+├── conf/
+├── data/
+├── docs/
+├── notebooks/
+├── pyproject.toml
+├── README.md
+└── src/
+    └── actuarial_loss_prediction/
+        └── pipelines/
+            ├── feature_engineering/
+            │   ├── nodes.py
+            │   ├── pipeline.py
+            │   └── transformers.py
+            ├── model_training/
+            │   ├── nodes.py
+            │   └── pipeline.py
+            └── model_prediction/
+                ├── nodes.py
+                └── pipeline.py
+
 ```
 
-## Feature Engineering
 
-### Pipeline Architecture
+## Pipeline Architecture
 
-The feature engineering pipeline is structured in two main stages:
+<br>
 
 ```mermaid
 graph TD
@@ -80,7 +111,11 @@ graph TD
     E --> F["Output: Engineered Features<br/>Ready for Model Training"]
 ```
 
-#### Data fields
+<br>
+
+## Feature Engineering
+
+#### Data fields:
 
 * <b> ClaimNumber </b>: Unique policy identifier
 * <b> DateTimeOfAccident</b>: Date and time of accident
@@ -100,18 +135,57 @@ graph TD
 
 <br>
 
-The dataset contains relatively clean data. Simple checks are done to make sure we don't have irrelevant data (example: `DaysWorkedPerWeek` between 0 and 7, `DateReported` after `DateTimeOfAccident`, `HoursWorkedPerWeek`<150, etc.).
+The dataset is relatively clean. Basic validation checks were done to make sure we don't have irrelevant data (example: `DaysWorkedPerWeek` between 0 and 7, `DateReported` after `DateTimeOfAccident`, `HoursWorkedPerWeek`<150, etc.).
 
-The target `UltimateIncurredClaimCost` is highly positively skewed, with a few very large values, and it contains strickly positive values. 
+The only feature containing missing values is `MaritalStatus`, with 29 missing entries in the training set (out of 54000 rows, ~0.05%) and 18 in the test set.  Given the very low proportion of missing and the absence of additional contextual information, these values were imputed as "U" (Unknown). The number of missing observations is too low to reliably infer whether they correspond to the M or S categories based on other features or the target-based patterns.
 
-The only feature with misssing values is `MaritalStatus`, with 29 missing entries in training set (out of 54000 rows, ~0.05%) and 18 in test set.  Without extra information provided, I chose to impute them as "U" (Unknown). The number of missing observations is too low to reliably determine whether they correspond to the M or S category based on other features or the target-based patterns.
+### Datetime features
+Time-based features were extracted from `DateTimeOfAccident` and `DateReported`, including:
+- Year, month, and day components
+- `report_delay_hours`, capturing the delay between accident occurrence and reporting time.
+
+### Text feature
+
+The `ClaimDescription` field contains free-text descriptions of accident claims. To leverage this information, embeddings were generated using the `Qwen/Qwen3-Embedding-0.6B` sentence transformer model. These embeddings were then reduced to 100 dimensions using PCA to improve efficiency and reduce noise.
+
+### Future Improvements
+
+Further work on `ClaimDescription` could improve the model performance: 
+- Experiment with stronger embedding models or LLM-based encoders
+- Extract structured information (using LLM) such as:
+    - Affected body parts
+    - Injury types
+    - Accident categories or causes
+
+<br>
+
+## Target Distribution
+
+The target variable, `UltimateIncurredClaimCost`, is strictly positive and heavily right-skewed, with a small number of extremely large values.
+
+To improve model performance, two common strategies may be considered:
+- Applying a log transformation to the target variable
+- Removing extreme outliers using a configurable threshold (e.g., setting multiplier in parameters_feature_engineering.yml to 3.0 for conservative filtering, or higher values for more aggressive filtering)
+
+These approaches can help stabilize variance and reduce the influence of extreme values on the loss function. At this stage, target log-transformation has not been implemented in the pipeline.
+
+<br>
 
 ## Model Training
 
-Tree-based ensemble models have good performance with structured data. They have the advantage to be robust to outliers and can handle varying ranges of features, that is why there is no need to do scaling. They can handle skewed feature like `InitialIncurredClaimCost`.
+Tree-based ensemble methods perform particularly well on structured tabular data. They are robust to outliers, handle non-linear relationships effectively, and naturally support features with varying scales, eliminating the need for feature scaling. They also handle skewed features such as `InitialIncurredClaimCost` without requiring transformation (scaling).
 
-Here, I use a sckit-learn tree-based ensemble model `HistGradientBoostingRegressor`. I usually use lightGBM or XGBoost, but I had a kernel crash trouble within jupyther notebook in vscode, so I use this similar model.
+For this project, I use scikit-learn’s `HistGradientBoostingRegressor`, a gradient boosting model based on decision trees.
 
+LightGBM and XGBoost were also considered; Note: I usually use them, but they were not used in this project due to local environment instability. I had repeated kernel crashes when running them in Jupyter notebooks in VS Code on macOS.
+
+
+
+<br>
+
+## Predictions
+
+The pipeline outputs a versioned `predictions.csv` file in the same format as the sample submission. It contains two columns: `ClaimNumber` and the predicted `UltimateIncurredClaimCost`.
 
 
 
