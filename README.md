@@ -2,6 +2,13 @@
 
 <br>
 
+<center><a href="https://bchung0.github.io/actuarial-loss-prediction/?types=nodes,datasets&expandAllPipelines=false&pid=__default__" target="_blank" rel="noopener noreferrer">
+  <img 
+    src="https://img.shields.io/badge/Open-Kedro%20Viz-7A3EF0?style=for-the-badge&logo=kedro&logoColor=white"
+    alt="Open Kedro Viz"
+  />
+</a></center>
+
 ## Goal
 
 The goal of this challenge is to predict Workers Compensation claims using highly realistic synthetic data.
