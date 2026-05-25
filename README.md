@@ -85,7 +85,7 @@ Click here to access the kaggle challenge page:
 ```
 <br>
 
-## Pipeline Architecture
+## Feature Engineering
 
 <br>
 
@@ -128,7 +128,7 @@ graph TD
 
 <br>
 
-## Feature Engineering
+
 
 #### Data fields:
 
