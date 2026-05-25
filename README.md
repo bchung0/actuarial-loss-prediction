@@ -41,7 +41,6 @@ The challenge is closed, but late submissions can still be made after the offici
 
 The dataset was built and supplied by Colin Priest.
 
-<br>
 Click here to access the kaggle challenge page: 
 [https://www.kaggle.com/competitions/actuarial-loss-estimation/overview](https://www.kaggle.com/competitions/actuarial-loss-estimation/overview)
 
@@ -164,7 +163,6 @@ Time-based features were extracted from `DateTimeOfAccident` and `DateReported`,
 - Year, month, and day components
 - `report_delay_hours`, capturing the delay between accident occurrence and reporting time.
 
-<br>
 The challenge description specifies that competitors are encouraged to account for claims inflation. However, since the train/test split on `DateTimeOfAccident` and `DateReported` preserves a similar temporal distribution rather than using a chronological past/future split, inflation effects are implicitly captured by the time-based features already present in the dataset.
 
 <br>
