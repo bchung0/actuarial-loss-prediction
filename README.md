@@ -37,7 +37,48 @@ project-dir         # Parent directory of the template
 └── src             # Project source code
 ```
 
-## Feature Engineerring
+## Feature Engineering
+
+### Pipeline Architecture
+
+The feature engineering pipeline is structured in two main stages:
+
+```mermaid
+graph TD
+    A["Input Data<br/>Train/Test Set"] --> B["Feature Engineering Pipeline"]
+    
+    B --> C["Stage 1: Categorical Features"]
+    
+    C --> C1["ConstantImputer<br/>MaritalStatus → U"]
+    C1 --> C2["OneHotEncoder<br/>Encode Cat Features"]
+    
+    C2 --> D["Stage 2: FeatureUnion<br/>Add New Features & Drop Columns"]
+    
+    D --> D1["Branch 1: Date Features"]
+    D --> D2["Branch 2: Claim Description Features"]
+    D --> D3["Branch 3: Column Dropper"]
+    
+    D1 --> D1A["ReportDelayHours"]
+    D1 --> D1B["AccidentTime<br/>year, month, day, hour"]
+    D1 --> D1C["ReportTime<br/>year, month, day"]
+    
+    D2 --> D2A["ClaimDescriptionWordCount"]
+    D2 --> D2B["ColumnSelector<br/>Select ClaimDescription"]
+    
+    D2B --> D2B2["SentenceEmbedding<br/>Qwen/Qwen3-Embedding-0.6B"]
+    D2B2 --> D2B3["PCATransformer<br/>Dimensionality Reduction"]
+    
+    D3 --> D3A["Drop Columns:<br/>ClaimDescription, ClaimNumber,<br/>DateTimeOfAccident, DateReported"]
+    
+    D1A --> E["Concatenate All Features"]
+    D1B --> E
+    D1C --> E
+    D2A --> E
+    D2B3 --> E
+    D3A --> E
+    
+    E --> F["Output: Engineered Features<br/>Ready for Model Training"]
+```
 
 #### Data fields
 
