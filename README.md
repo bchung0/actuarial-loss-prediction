@@ -1,10 +1,10 @@
 # Kaggle challenge: Actuarial loss prediction 
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.13-blue?style=for-the-badge&logo=python" alt="Python 3.13" />
-  <img src="https://img.shields.io/badge/Kedro-Pipeline-7A3EF0?style=for-the-badge&logo=kedro&logoColor=white" alt="Kedro Pipeline" />
-  <img src="https://img.shields.io/badge/uv-venv-000000?style=for-the-badge&logo=python&logoColor=white" alt="uv venv" />
-  <img src="https://img.shields.io/badge/Ruff-Code%20Style-000000?style=for-the-badge&logo=ruff&logoColor=white" alt="Ruff code style" />
+<img src="https://img.shields.io/badge/Python-3.13-blue?logo=python" alt="Python 3.13" />
+<img src="https://img.shields.io/badge/powered_by-kedro-ffc900?logo=kedro" alt="Powered by Kedro" />
+<img src="https://img.shields.io/badge/uv-venv-000000?logo=python&logoColor=white" alt="uv venv" />
+<img src="https://img.shields.io/badge/Ruff-Code%20Style-000000?logo=ruff&logoColor=white" alt="Ruff code style" />
 </p>
 
 <br>
