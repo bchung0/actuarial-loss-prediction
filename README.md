@@ -31,6 +31,8 @@ The target variable is:
 
 The evaluation metric is **RMSE (Root Mean Squared Error)**, which heavily penalizes large errors. This makes the problem particularly sensitive to outliers. It is suitable for this problem as we want to avoid large errors on claim cost prediction.
 
+The challenge is closed, but late submissions can still be made after the official deadline to evaluate model predictions.
+
 <br>
 
 ## Data 
@@ -39,8 +41,6 @@ The evaluation metric is **RMSE (Root Mean Squared Error)**, which heavily penal
 - sample_submission.csv
 
 The dataset was built and supplied by Colin Priest.
-
-The challenge is closed, but late submissions can still be made after the official deadline to evaluate model predictions.
 
 Click here to access the kaggle challenge page: 
 [https://www.kaggle.com/competitions/actuarial-loss-estimation/overview](https://www.kaggle.com/competitions/actuarial-loss-estimation/overview)
@@ -155,16 +155,23 @@ The dataset is relatively clean. Basic validation checks were done to make sure 
 
 The only feature containing missing values is `MaritalStatus`, with 29 missing entries in the training set (out of 54000 rows, ~0.05%) and 18 in the test set.  Given the very low proportion of missing and the absence of additional contextual information, these values were imputed as "U" (Unknown). The number of missing observations is too low to reliably infer whether they correspond to the M or S categories based on other features or the target-based patterns.
 
-The challenge description specifies that competitors are encouraged to account for claims inflation. However, since the train/test split on `DateTimeOfAccident` and `DateReported` preserves a similar temporal distribution rather than using a chronological past/future split, inflation effects are implicitly captured by the time-based features already present in the dataset.
+
+<br>
 
 ### Datetime features
 Time-based features were extracted from `DateTimeOfAccident` and `DateReported`, including:
 - Year, month, and day components
 - `report_delay_hours`, capturing the delay between accident occurrence and reporting time.
 
+<br>
+The challenge description specifies that competitors are encouraged to account for claims inflation. However, since the train/test split on `DateTimeOfAccident` and `DateReported` preserves a similar temporal distribution rather than using a chronological past/future split, inflation effects are implicitly captured by the time-based features already present in the dataset.
+
+<br>
+
 ### Text feature
 
 The `ClaimDescription` field contains free-text descriptions of accident claims. To leverage this information, embeddings were generated using the `Qwen/Qwen3-Embedding-0.6B` sentence transformer model. These embeddings were then reduced to 100 dimensions using PCA to improve efficiency and reduce noise.
+<br>
 
 ### Future Improvements
 
