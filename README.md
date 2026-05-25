@@ -32,7 +32,6 @@ The target variable is:
 The evaluation metric is **RMSE (Root Mean Squared Error)**, which heavily penalizes large errors. This makes the problem particularly sensitive to outliers. It is suitable for this problem as we want to avoid large errors on claim cost prediction.
 
 The challenge is closed, but late submissions can still be made after the official deadline to evaluate model predictions.
-
 <br>
 
 ## Data 
@@ -42,6 +41,7 @@ The challenge is closed, but late submissions can still be made after the offici
 
 The dataset was built and supplied by Colin Priest.
 
+<br>
 Click here to access the kaggle challenge page: 
 [https://www.kaggle.com/competitions/actuarial-loss-estimation/overview](https://www.kaggle.com/competitions/actuarial-loss-estimation/overview)
 
@@ -153,8 +153,9 @@ graph TD
 
 The dataset is relatively clean. Basic validation checks were done to make sure there is no irrelevant data (example: `DaysWorkedPerWeek` between 0 and 7, `DateReported` after `DateTimeOfAccident`, `HoursWorkedPerWeek`<150, etc.). These checks should be performed during the exploratory phase, and they can also be incorporated into the pipeline at a later stage.
 
-The only feature containing missing values is `MaritalStatus`, with 29 missing entries in the training set (out of 54000 rows, ~0.05%) and 18 in the test set.  Given the very low proportion of missing and the absence of additional contextual information, these values were imputed as "U" (Unknown). The number of missing observations is too low to reliably infer whether they correspond to the M or S categories based on other features or the target-based patterns.
+<br>
 
+The only feature containing missing values is `MaritalStatus`, with 29 missing entries in the training set (out of 54000 rows, ~0.05%) and 18 in the test set.  Given the very low proportion of missing and the absence of additional contextual information, these values were imputed as "U" (Unknown). The number of missing observations is too low to reliably infer whether they correspond to the M or S categories based on other features or the target-based patterns.
 
 <br>
 
@@ -171,6 +172,7 @@ The challenge description specifies that competitors are encouraged to account f
 ### Text feature
 
 The `ClaimDescription` field contains free-text descriptions of accident claims. To leverage this information, embeddings were generated using the `Qwen/Qwen3-Embedding-0.6B` sentence transformer model. These embeddings were then reduced to 100 dimensions using PCA to improve efficiency and reduce noise.
+
 <br>
 
 ### Future Improvements
